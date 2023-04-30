@@ -1,0 +1,30 @@
+# Version del docker compose
+version: '3'
+
+services:
+  db:
+    container_name: postgres-db
+    image: postgres:15.1
+    volumes:
+      # - postgres-db:/var/lib/postgresql/data
+
+      # Para mapear una carpeta del file system local con la carpeta del contenedor. El ./ indica que es un path relativa o sea la carpeta local se ubicara en /Users/jota/Sites/docker/postgres-pgadmin/postgres
+      - ./postgres:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_PASSWORD=123456
+  pgAdmin:
+    depends_on:
+      - db
+    image: dpage/pgadmin4:6.17
+    ports:
+      - "8080:80"
+    volumes:
+      # El directorio de pgadmin en el contenedor es: /var/lib/pgadmin
+      - ./pgadmin:/var/lib/pgadmin
+    environment:
+      - PGADMIN_DEFAULT_PASSWORD=123456
+      - PGADMIN_DEFAULT_EMAIL=superman@google.com
+#volumes:
+  #Si no se especifica que es un volumen externo o un volumen ya existente va a crear el volumen: <nombre del proyecto>-<nombre del volumen>
+  # postgres-db:
+  #   external: true
